@@ -1,19 +1,53 @@
-#from the big data national laboratory, shen zhen university.
+# MEES-PINN
 
-this is a pulg-in platform for testing Pinn. it include many pde question of which number is 24 now and many baseline method included gd type and ea method, 
+> From the Big Data National Laboratory, Shenzhen University
 
-specific gd include the gd, sgd, batch sgd and the sota lion.
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-specific ea include the es, ga, pso, mulit-objective optimization eg. cmaes, ga, nsga2 ...
+## 📖 Introduction
 
-it's noted that we propose our new es category method named amnes which consist of the ga global searching talent and the gd local searching talent.
+**MEES-PINN** is a plug-in platform for testing Physics-Informed Neural Networks (PINNs). It includes **24 PDE benchmark problems** and various baseline methods, covering both Gradient Descent (GD) and Evolutionary Algorithm (EA) approaches.
 
-in addition, we have done the complete experiment for compare our new method to this method include ga and gd in all the benchmark in this platform.
+## ✨ Features
 
-The result certify our menthod have the more capacity to solve the pinn question.
+### Gradient Descent Methods
+- GD (Gradient Descent)
+- SGD (Stochastic Gradient Descent)
+- Batch SGD
+- Lion (SOTA optimizer)
 
-if you want using the project and push the outcome to your public aticle.
+### Evolutionary Algorithm Methods
+- ES (Evolution Strategy)
+- GA (Genetic Algorithm)
+- PSO (Particle Swarm Optimization)
+- CMA-ES
+- NSGA-II (Multi-objective optimization)
+- And more...
 
-you can cite our aticle by the bib : **Stay tuned**
+### 🚀 Our Method: AMNES
 
-Special thanks to the support of Tsinghua University's open source project.
+We propose a novel ES-category method named **AMNES**, which combines:
+- **Global search capability** from Genetic Algorithms
+- **Local search capability** from Gradient Descent
+
+## 📊 Experiments
+
+We have conducted comprehensive experiments comparing our method against GA and GD baselines across all benchmarks in this platform. The results demonstrate that **AMNES has superior capacity to solve PINN problems**.
+
+## 📝 Citation
+
+If you use this project in your research, please cite our paper:
+
+
+> **📢 Stay tuned for the official citation!**
+
+## 🙏 Acknowledgements
+
+Special thanks to the support of **Tsinghua University's open source project**.
+
+---
+
+<p align="center">
+  Made with ❤️ by Big Data National Laboratory, Shenzhen University
+</p>
