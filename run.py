@@ -2,7 +2,6 @@ import argparse
 import os
 from trainer.base import trainer
 
-# from src.PDE_category.base import linear
 from src.PDE_category.Burgers import Burgers1D, Burgers2D
 from src.PDE_category.chaotic import GrayScottEquation, KuramotoSivashinskyEquation
 from src.PDE_category.Heat import Heat2D_ComplexGeometry, Heat2D_LongTime, Heat2D_Multiscale, Heat2D_VaryingCoef, HeatND
@@ -12,15 +11,14 @@ from src.PDE_category.NS import NS2D_BackStep, NS2D_Classic, NS2D_LidDriven, NS2
 from src.PDE_category.Poisson import Poisson1D, Poisson2D_Classic, Poisson2D_ManyArea, Poisson3D_ComplexGeometry, PoissonBoltzmann2D, PoissonND
 from src.PDE_category.Wave import Wave1D, Wave2D_Heterogeneous, Wave2D_LongTime
 
-pde_list = [Wave1D]
-    # pde_list = [Burgers1D] + \
-    # [GrayScottEquation, KuramotoSivashinskyEquation] + \
-    # [Heat2D_ComplexGeometry, Heat2D_LongTime, Heat2D_Multiscale, Heat2D_VaryingCoef, HeatND] + \
-    # [Helmholtz2D] + \
-    # [HeatInv, PoissonInv] + \
-    # [NS2D_BackStep, NS2D_Classic, NS2D_LidDriven, NS2D_LongTime] +\
-    # [Poisson1D, Poisson2D_Classic, Poisson2D_ManyArea, Poisson3D_ComplexGeometry, PoissonBoltzmann2D, PoissonND] + \
-    # [Wave1D, Wave2D_Heterogeneous, Wave2D_LongTime]
+pde_list = [Burgers1D] + \
+    [GrayScottEquation, KuramotoSivashinskyEquation] + \
+    [Heat2D_ComplexGeometry, Heat2D_LongTime, Heat2D_Multiscale, Heat2D_VaryingCoef, HeatND] + \
+    [Helmholtz2D] + \
+    [HeatInv, PoissonInv] + \
+    [NS2D_BackStep, NS2D_Classic, NS2D_LidDriven, NS2D_LongTime] +\
+    [Poisson1D, Poisson2D_Classic, Poisson2D_ManyArea, Poisson3D_ComplexGeometry, PoissonBoltzmann2D, PoissonND] + \
+    [Wave1D, Wave2D_Heterogeneous, Wave2D_LongTime]
 
 EA_algo_list = ["AGA", "CMAES", "GA", "MOEAD", "NSGA2", "PSO", "xNES_Adam", "xNES_NAG", "GD"]
 
