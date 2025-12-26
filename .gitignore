@@ -29,6 +29,7 @@ LossFigure/
 summary/
 visualization/
 ICBC_cc/
+Groundtruth_new/
 *.log
 *.csv
 *.png
