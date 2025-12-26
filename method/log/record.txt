@@ -1,0 +1,3 @@
+pde:burgers1d, method:CMAES, Finished at iter=20330, last loss=1.68e-28, best loss=9.85e-29
+pde:burgers1d, method:GA   , Finished at iter=18330, last loss=1.40e-45, best loss=2.80e-45
+                                                                                   3.51e-31pde:burgers1d, method:CMAES, Finished at iter=19280, last loss=1.24e-01, best loss=1.24e-01pde:burgers1d, method:CMAES, Finished at iter=19882, last loss=1.24e-01, best loss=1.24e-01

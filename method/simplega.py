@@ -1,0 +1,199 @@
+# import os
+# os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+# import sys
+# import time
+# import numpy as np
+# import pandas as pd
+# import matplotlib.pyplot as plt
+
+# from jax import numpy as jnp
+# from flax.core.frozen_dict import unfreeze, freeze
+# from evojax.algo import SimpleGA
+
+# '''Config'''
+# seed = 1
+# pop_size = 50
+# max_iters = 100000
+# max_time = 60
+# pde = 'burgers1d'
+
+# '''Initialize'''
+# if pde == 'burgers1d':
+#     from src.pde.GrayScottEquation import get_fitness, policy
+
+# solver = SimpleGA(
+#     pop_size=pop_size,
+#     param_size=policy.num_params,
+#     seed=seed,
+# )
+
+# loss_ls = []
+# t_training = []
+# runtime = 0.0
+# train_iters = 0
+
+# '''Trianing loop'''
+# while train_iters < max_iters and runtime < max_time:
+#     start = time.time()
+#     params = solver.ask()
+#     scores = get_fitness(params)
+#     solver.tell(fitness=scores)
+
+#     avg_loss = np.mean(np.array(scores, copy=False))
+#     loss_ls.append(-avg_loss)
+#     elapsed = time.time() - start
+#     t_training.append(elapsed)
+#     runtime += elapsed
+#     train_iters += 1
+
+#     print(f"iter={train_iters:5d}  time={runtime:6.2f}s  loss={loss_ls[-1]:.2e}")
+
+# log_message = f"pde:{pde}, method:GA   , Finished at iter={train_iters}, last loss={loss_ls[-1]:.2e}, best loss={min(loss_ls):.2e}"
+# with open('log/record.txt', "w") as log_file:
+#     log_file.write(log_message)
+# print(log_message)
+
+
+# ===== GPU & 路径环境 =====
+import os, sys, time
+from pathlib import Path
+
+PROJECT_ROOT = "/home/chenfanke/TaskPINN"
+os.environ.pop("PYTHONPATH", None)
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+
+# ===== 常用库 =====
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from jax import numpy as jnp
+from flax.core.frozen_dict import unfreeze, freeze
+from evojax.algo import SimpleGA
+
+# ===== 统一保存目录（与标准版一致）=====
+PROJECT_ROOT = Path("/home/chenfanke/TaskPINN")
+TARGET_BASE  = PROJECT_ROOT / "train" / "simpleGa"
+LOSS_DIR     = TARGET_BASE / "loss_iters"
+RESULT_DIR   = TARGET_BASE / "result"
+LOSS_TIME    = TARGET_BASE / "loss_time_csv"
+for d in [LOSS_DIR, RESULT_DIR, LOSS_TIME]:
+    d.mkdir(parents=True, exist_ok=True)
+
+# ===== 配置 =====
+seed        = 1
+pop_size    = 50
+max_iters   = 5000    
+max_time    = 60        
+
+# ===== PDE =====
+pde = "Wave2D_LongTime"
+from src.pde.Wave2D_LongTime import get_fitness, policy, train_task
+
+# ===== 初始化优化器 =====
+solver = SimpleGA(
+    pop_size=pop_size,
+    param_size=policy.num_params,
+    seed=seed,
+)
+
+loss_ls = []
+iter_time_ls = []
+runtime = 0.0
+train_iters = 0
+
+# ===== 训练循环（与标准版一致）=====
+while train_iters < max_iters:
+    t0 = time.time()
+
+    params = solver.ask()
+    scores = get_fitness(params)           # 越大越好
+    solver.tell(fitness=scores)
+
+    avg_loss = np.mean(np.array(scores, copy=False))
+    loss_ls.append(-avg_loss)
+
+    elapsed = time.time() - t0
+    iter_time_ls.append(elapsed)
+    runtime += elapsed
+    train_iters += 1
+
+    print(f"iter={train_iters:5d}  time={runtime:6.2f}s  loss={loss_ls[-1]:.2e}")
+
+print(f"\nFinished at iter={train_iters}, last loss={loss_ls[-1]:.2e}, best loss={min(loss_ls):.2e}")
+
+# ===== 保存 loss 曲线到 loss_iters/ =====
+fig_path = LOSS_DIR / f"{pde}_loss_iter.png"
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, train_iters + 1), loss_ls, 'b-', linewidth=2)
+plt.xlabel('Iteration', fontsize=12)
+plt.ylabel('Loss', fontsize=12)
+plt.title(f'{pde} Loss Curve (GA)', fontsize=14)
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.savefig(fig_path, dpi=300, bbox_inches='tight')
+plt.close()
+print(f"📈 曲线已保存：{fig_path}")
+
+# ===== 恢复最优参数 =====
+# 若 evojax.SimpleGA 没有 best_params 属性，可退化为记录历次最优；这里按与 CMA-ES 一致的接口使用：
+flat_best = jnp.array([solver.best_params])
+this_dict = policy.format_params_fn(flat_best)
+new_dict = unfreeze(this_dict)
+for m in new_dict:
+    for p_ in new_dict[m]:
+        for k in new_dict[m][p_]:
+            new_dict[m][p_][k] = new_dict[m][p_][k][0]
+params_tree = freeze(new_dict)
+
+# ===== 模型预测与结果保存 =====
+X_input = train_task.X_candidate
+Y_true  = train_task.u_ref
+model   = train_task.net
+derivs  = model.derivatives(params_tree, X_input)
+
+def _xyt(X):
+    X = np.asarray(X)
+    x = X[:, 0]
+    y = X[:, 1] if X.shape[1] >= 2 else 0
+    t = X[:, 2] if X.shape[1] >= 3 else 0
+    return x, y, t
+
+x, y, t = _xyt(X_input)
+
+if Y_true.shape[1] == 1:
+    u_pred = np.asarray(derivs['u'])
+    df = pd.DataFrame({'x': x, 'y': y, 't': t,
+                       'u_true': Y_true[:, 0], 'u_pred': u_pred[:, 0]})
+elif Y_true.shape[1] == 2:
+    u_pred = np.asarray(derivs['u'])
+    v_pred = np.asarray(derivs['v'])
+    df = pd.DataFrame({'x': x, 'y': y, 't': t,
+                       'u_true': Y_true[:, 0], 'v_true': Y_true[:, 1],
+                       'u_pred': u_pred[:, 0], 'v_pred': v_pred[:, 0]})
+elif Y_true.shape[1] == 3:
+    u_pred = np.asarray(derivs['u'])
+    v_pred = np.asarray(derivs['v'])
+    p_pred = np.asarray(derivs['p'])
+    df = pd.DataFrame({'x': x, 'y': y, 't': t,
+                       'u_true': Y_true[:, 0], 'v_true': Y_true[:, 1], 'p_true': Y_true[:, 2],
+                       'u_pred': u_pred[:, 0], 'v_pred': v_pred[:, 0], 'p_pred': p_pred[:, 0]})
+else:
+    raise ValueError(f"Unsupported output dimension: {Y_true.shape[1]}")
+
+csv_path = RESULT_DIR / f"{pde}_Result.csv"
+df.to_csv(csv_path, index=False)
+print(f"✅ 数据已保存：{csv_path}")
+
+# ===== 迭代耗时-损失 CSV =====
+iter_time_cumsum = np.cumsum(iter_time_ls)
+df_log = pd.DataFrame({
+    "iter": np.arange(1, len(loss_ls) + 1, dtype=int),
+    "cum_time": iter_time_cumsum,
+    "loss": loss_ls
+})
+loss_time_csv_path = LOSS_TIME / f"{pde}_IterTime_Loss.csv"
+df_log.to_csv(loss_time_csv_path, index=False)
+print(f"✅ 累计耗时与损失已保存：{loss_time_csv_path}")

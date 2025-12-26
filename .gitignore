@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+run*.py
+test.py
+
+# Data
+data
+
+
+# VS Code
+.vscode/
+
+# Project Outputs and Logs
+train_log/
+multi_train_log/
+train_new/
+solution_space_plots/
+Result/
+record/
+result/
+LossFigure/
+summary/
+visualization/
+ICBC_cc/
+*.log
+*.csv
+*.png
+*.npz
+*.pdf
+*.jpg
+*.deb
