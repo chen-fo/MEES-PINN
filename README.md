@@ -2,7 +2,7 @@
 
 > From the School of Artifical Intelligence, Shenzhen University
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## 📖 Introduction
@@ -12,17 +12,15 @@
 ## ✨ Features
 
 ### Gradient Descent Methods
-- GD (Gradient Descent)
-- SGD (Stochastic Gradient Descent)
+- SGD 
 - Batch SGD
 - Lion (SOTA optimizer)
 
 ### Evolutionary Algorithm Methods
-- ES (Evolution Strategy)
-- GA (Genetic Algorithm)
-- PSO (Particle Swarm Optimization)
+- GA 
+- PSO 
 - CMA-ES
-- NSGA-II (Multi-objective optimization)
+- NSGA-II
 - And more...
 
 ### 🚀 Our Method: AMNES
@@ -53,5 +51,5 @@ If you use this project in your research, please cite our paper:
 ---
 
 <p align="center">
-  Made with ❤️ by Big Data National Laboratory, Shenzhen University
+  Made with ❤️ by Shenzhen University
 </p>
