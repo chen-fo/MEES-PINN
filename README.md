@@ -41,14 +41,11 @@ If you use this project in your research, please cite our paper:
 
 
 ```
-@ARTICLE{11450434,
+@ARTICLE{chenmees2026,
   author={Chen, Fanke and Zhou, Fengrong and Pan, Yinghui and Lu, Yifan and Luo, Chengwen},
   journal={IEEE Transactions on Evolutionary Computation}, 
   title={A Modular Framework with an Adaptive Momentum-based Evolutionary Strategy for Physics-Informed Neural Networks}, 
   year={2026},
-  volume={},
-  number={},
-  pages={1-1},
   keywords={Training;Optimization;Benchmark testing;Neural networks;Evolutionary computation;Deep learning;Convergence;Accuracy;Scalability;Partial differential equations;PINN;Evolutionary Strategy;Benchmarks},
   doi={10.1109/TEVC.2026.3676646}}
 ```
