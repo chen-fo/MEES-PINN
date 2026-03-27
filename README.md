@@ -44,7 +44,6 @@ If you use this project in your research, please cite our paper:
   journal={IEEE Transactions on Evolutionary Computation}, 
   title={A Modular Framework with an Adaptive Momentum-based Evolutionary Strategy for Physics-Informed Neural Networks}, 
   year={2026},
-  keywords={Training;Optimization;Benchmark testing;Neural networks;Evolutionary computation;Deep learning;Convergence;Accuracy;Scalability;Partial differential equations;PINN;Evolutionary Strategy;Benchmarks},
   doi={10.1109/TEVC.2026.3676646}}
 ```
 
